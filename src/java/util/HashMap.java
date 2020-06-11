@@ -1734,7 +1734,9 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
                 /* zero initial threshold signifies using defaults */
                 // 如果实例化HashMap时没有指定初始容量，则使用默认的容量与阈值
             } else {
+                // 哈希数组默认容量
                 newCap = DEFAULT_INITIAL_CAPACITY;
+                // HashMap默认装载因子（负荷系数0.75f） * 16
                 newThr = (int) (DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
             }
         }
