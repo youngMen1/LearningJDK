@@ -265,7 +265,8 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
      * tree removal about conversion back to plain bins upon
      * shrinkage.
      */
-    static final int TREEIFY_THRESHOLD = 8;     // 某个哈希槽（链）上的元素数量增加到此值后，这些元素进入波动期，即将从链表转换为红黑树
+    // 某个哈希槽（链）上的元素数量增加到此值后，这些元素进入波动期，即将从链表转换为红黑树
+    static final int TREEIFY_THRESHOLD = 8;
     
     /**
      * The smallest table capacity for which bins may be treeified.
@@ -311,7 +312,9 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
      * Additionally, if the table array has not been allocated, this field holds the initial array capacity,
      * or zero signifying DEFAULT_INITIAL_CAPACITY.
      */
-    int threshold;          // HashMap扩容阈值，【一般】由（哈希数组容量*HashMap装载因子）计算而来，HashMap中元素数量超过该阈值时，哈希数组需要扩容
+    // HashMap扩容阈值，【一般】由（哈希数组容量*HashMap装载因子0.75f）计算而来，HashMap中元素数量超过该阈值时，哈希数组需要扩容
+    // threshold = loadFactor * table.length。
+    int threshold;
     
     /**
      * Holds cached entrySet(). Note that AbstractMap fields are used
@@ -1566,16 +1569,18 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
      * 向当前Map中存入新的元素，并返回旧元素
      *
      * hash         key的哈希值
-     * onlyIfAbsent 是否需要维持原状（不覆盖旧值）
-     * evict        if false, the table is in creation mode.
+     * onlyIfAbsent 是否需要维持原状（不覆盖旧值）也就是说如果value之前存在了，就不会被新put的元素覆盖。
+     * evict        evict参数用于LinkedHashMap中的尾部操作，这里没有实际意义。if false, the table is in creation mode.
      *
      * 返回同位元素的旧值（在当前Map中占据相同位置的元素）
      * 如果不存在同位元素，即插入了新元素，则返回null
      * 如果存在同位元素，但同位元素的旧值为null，那么也返回null
      */
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
-        Node<K, V>[] tab;   // 指向当前哈希数组
-        Node<K, V> p;       // 指向待插入元素应当插入的位置
+        // 指向当前哈希数组
+        Node<K, V>[] tab;
+        // 指向待插入元素应当插入的位置
+        Node<K, V> p;
         int n, i;
         
         // 如果哈希数组还未初始化，或者容量无效，则需要初始化一个哈希数组
@@ -1715,10 +1720,10 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
                 
                 // 如果容量成功加倍（没有达到上限），则将阈值也加倍
                 if(newCap<MAXIMUM_CAPACITY && oldCap >= DEFAULT_INITIAL_CAPACITY) {
-                    newThr = oldThr << 1; // double threshold
+                    // 左移位运算符举例 3 << 2 = 12 -->3*2*2
+                    newThr = oldThr << 1; // double threshold oldThr * 2
                 }
             }
-            
             // 如果哈希数组还未初始化（首次进来）
         } else {
             /* initial capacity was placed in threshold */
